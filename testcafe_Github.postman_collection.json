@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "3efaa294-2dd8-4628-b638-9659dc3eed75",
+		"name": "testcafe_Github",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "list repos_unauthorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b995b66-4cc8-4b8d-94cd-697b5639fa0e",
+						"exec": [
+							"//varfiables",
+							"var jsonData = pm.response.json();",
+							"//assertions",
+							"pm.test(\"[Validation] Request is unauthorized\", function() {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"pm.test(\"Response time is less than 2000ms_for unauthorized request\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Validate error message on unauthorized request\", function() {",
+							"",
+							"    pm.expect(jsonData.message).to.eql(\"Requires authentication\");",
+							"});",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Requires authentication\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/user/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list repos_authorized",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b995b66-4cc8-4b8d-94cd-697b5639fa0e",
+						"exec": [
+							"//varfiables",
+							"var jsonData = pm.response.json();",
+							"//assertions",
+							"pm.test(\"validate login\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response time is less than 2000ms_for unauthorized request\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Validate Data in the repo\", function() {",
+							"",
+							"    pm.expect(jsonData[0].name).to.eql(\"testCafe\");",
+							"    pm.expect(jsonData[0].owner.login).to.eql(\"mariamnada\");",
+							"});",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"testCafe\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "mariamnada84@gmail.com",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "Password*15",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/user/repos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "exercise_2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4b995b66-4cc8-4b8d-94cd-697b5639fa0e",
+						"exec": [
+							"//varfiables",
+							"var jsonData = pm.response.json();",
+							"var numberOfitems= jsonData.data.length;",
+							"//assertions",
+							"pm.test(\"validate endpoint\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response time is less than 2000ms\", function() {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Validate Data in the repo\", function() {",
+							"",
+							"    pm.expect(jsonData.page).to.eql(2);",
+							"        pm.expect(numberOfitems).to.eql(6);",
+							"});",
+							"",
+							"//count(jsonData.data)",
+							"",
+							"",
+							"",
+							"",
+							"/*function statusCounter(inputs) {",
+							"  let counter = 0;",
+							"  for (const input of inputs) {",
+							"    if (input.status == 0) counter += 1;",
+							"  }",
+							"  return counter;",
+							"}",
+							"",
+							"statusCounter(jsonData.data.id[0])*/",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users?page=2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
